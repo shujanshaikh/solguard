@@ -15,4 +15,12 @@ pub mod solguard {
     pub fn initialize_root(ctx: Context<InitializeRoot>) -> Result<()> {
         instructions::initialize_root::handler(ctx)
     }
+
+    pub fn create_role(ctx: Context<CreateRole>, role_name: String) -> Result<()> {
+        instructions::create_role::handler(ctx, role_name)
+    }
+
+    pub fn create_permission(ctx: Context<CreatePermission>, permission_name: String) -> Result<()> {
+        instructions::create_permission::handler(ctx, permission_name)
+    }
 }

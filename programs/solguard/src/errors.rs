@@ -40,4 +40,7 @@ pub enum RbacError {
 
     #[msg("The role permission link does not match the expected permission")]
     RolePermissionMismatch,
+
+    #[msg("Arithmetic Error")]
+    ArithmeticError,
 }
