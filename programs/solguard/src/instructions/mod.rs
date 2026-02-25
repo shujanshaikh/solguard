@@ -1,7 +1,19 @@
 pub mod initialize_root;
 pub mod create_role;
 pub mod create_permission;
+pub mod assign_permission_to_role;
+pub mod revoke_permission_from_role;
+pub mod assign_role_to_user;
+pub mod revoke_role_from_user;
+pub mod check_permission;
+pub mod transfer_authority;
 
 pub use initialize_root::*;
 pub use create_role::*;
 pub use create_permission::*;
+pub use assign_permission_to_role::*;
+pub use revoke_permission_from_role::*;
+pub use assign_role_to_user::*;
+pub use revoke_role_from_user::*;
+pub use check_permission::*;
+pub use transfer_authority::*;
