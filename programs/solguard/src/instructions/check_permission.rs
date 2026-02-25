@@ -25,17 +25,17 @@ pub struct CheckPermission<'info> {
     )]
     pub role_permission: Account<'info, RolePermission>,
 
-    // the user whose permission is being checked
+    /// CHECK: the user whose permission is being checked
     pub user: UncheckedAccount<'info>,
 
-    // the permission being checked — we just need the pubkey to match role_permission
+    /// CHECK: the permission being checked, we just need the pubkey to match role_permission
     pub permission: UncheckedAccount<'info>,
 }
 
 pub fn handler(ctx: Context<CheckPermission>) -> Result<()> {
     let user_role = &ctx.accounts.user_role;
 
-    // Check if the role assignment has expired
+    // check if the role assignment has expired
     let clock = Clock::get()?;
     require!(
         !user_role.is_expired(clock.unix_timestamp),
