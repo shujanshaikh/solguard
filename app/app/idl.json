@@ -1,0 +1,913 @@
+{
+  "address": "72YkKhqgzgue7niCaYs2QxQC3iLfUXGFMbo3yZ5K6d3Q",
+  "metadata": {
+    "name": "solguard",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "assign_permission_to_role",
+      "discriminator": [
+        118,
+        239,
+        224,
+        150,
+        110,
+        141,
+        96,
+        106
+      ],
+      "accounts": [
+        {
+          "name": "role_permission",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  108,
+                  101,
+                  95,
+                  112,
+                  101,
+                  114,
+                  109,
+                  105,
+                  115,
+                  115,
+                  105,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "role"
+              },
+              {
+                "kind": "account",
+                "path": "permission"
+              }
+            ]
+          }
+        },
+        {
+          "name": "role"
+        },
+        {
+          "name": "permission"
+        },
+        {
+          "name": "root_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  111,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "authority"
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "root_authority"
+          ]
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "assign_role_to_user",
+      "discriminator": [
+        209,
+        71,
+        156,
+        113,
+        179,
+        171,
+        92,
+        196
+      ],
+      "accounts": [
+        {
+          "name": "user_role",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  117,
+                  115,
+                  101,
+                  114,
+                  95,
+                  114,
+                  111,
+                  108,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "root_authority"
+              },
+              {
+                "kind": "account",
+                "path": "user"
+              },
+              {
+                "kind": "account",
+                "path": "role"
+              }
+            ]
+          }
+        },
+        {
+          "name": "role"
+        },
+        {
+          "name": "user"
+        },
+        {
+          "name": "root_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  111,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "authority"
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "root_authority"
+          ]
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "expires_at",
+          "type": "i64"
+        }
+      ]
+    },
+    {
+      "name": "check_permission",
+      "discriminator": [
+        154,
+        199,
+        232,
+        242,
+        96,
+        72,
+        197,
+        236
+      ],
+      "accounts": [
+        {
+          "name": "user_role"
+        },
+        {
+          "name": "role_permission"
+        },
+        {
+          "name": "user"
+        },
+        {
+          "name": "permission"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "create_permission",
+      "discriminator": [
+        190,
+        182,
+        26,
+        164,
+        156,
+        221,
+        8,
+        0
+      ],
+      "accounts": [
+        {
+          "name": "permission",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  101,
+                  114,
+                  109,
+                  105,
+                  115,
+                  115,
+                  105,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "root_authority"
+              },
+              {
+                "kind": "arg",
+                "path": "permission_name"
+              }
+            ]
+          }
+        },
+        {
+          "name": "root_authority",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  111,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "authority"
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "root_authority"
+          ]
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "permission_name",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "create_role",
+      "discriminator": [
+        170,
+        147,
+        127,
+        223,
+        222,
+        112,
+        205,
+        163
+      ],
+      "accounts": [
+        {
+          "name": "role",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  108,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "root_authority"
+              },
+              {
+                "kind": "arg",
+                "path": "role_name"
+              }
+            ]
+          }
+        },
+        {
+          "name": "root_authority",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  111,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "authority"
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "root_authority"
+          ]
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "role_name",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "initialize_root",
+      "discriminator": [
+        215,
+        103,
+        206,
+        228,
+        186,
+        88,
+        211,
+        28
+      ],
+      "accounts": [
+        {
+          "name": "root_authority",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  111,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "authority"
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "revoke_permission_from_role",
+      "discriminator": [
+        37,
+        123,
+        68,
+        182,
+        2,
+        116,
+        77,
+        147
+      ],
+      "accounts": [
+        {
+          "name": "role_permission",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  108,
+                  101,
+                  95,
+                  112,
+                  101,
+                  114,
+                  109,
+                  105,
+                  115,
+                  115,
+                  105,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "role"
+              },
+              {
+                "kind": "account",
+                "path": "permission"
+              }
+            ]
+          }
+        },
+        {
+          "name": "role",
+          "relations": [
+            "role_permission"
+          ]
+        },
+        {
+          "name": "permission",
+          "relations": [
+            "role_permission"
+          ]
+        },
+        {
+          "name": "root_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  111,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "authority"
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "root_authority"
+          ]
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "revoke_role_from_user",
+      "discriminator": [
+        184,
+        233,
+        178,
+        200,
+        157,
+        180,
+        135,
+        154
+      ],
+      "accounts": [
+        {
+          "name": "user_role",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  117,
+                  115,
+                  101,
+                  114,
+                  95,
+                  114,
+                  111,
+                  108,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "root_authority"
+              },
+              {
+                "kind": "account",
+                "path": "user"
+              },
+              {
+                "kind": "account",
+                "path": "role"
+              }
+            ]
+          }
+        },
+        {
+          "name": "role",
+          "relations": [
+            "user_role"
+          ]
+        },
+        {
+          "name": "user",
+          "relations": [
+            "user_role"
+          ]
+        },
+        {
+          "name": "root_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  111,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "authority"
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "root_authority"
+          ]
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "transfer_authority",
+      "discriminator": [
+        48,
+        169,
+        76,
+        72,
+        229,
+        180,
+        55,
+        161
+      ],
+      "accounts": [
+        {
+          "name": "root_authority",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  111,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "authority"
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "root_authority"
+          ]
+        }
+      ],
+      "args": [
+        {
+          "name": "new_authority",
+          "type": "pubkey"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Permission",
+      "discriminator": [
+        224,
+        83,
+        28,
+        79,
+        10,
+        253,
+        161,
+        28
+      ]
+    },
+    {
+      "name": "Role",
+      "discriminator": [
+        46,
+        219,
+        197,
+        24,
+        233,
+        249,
+        253,
+        154
+      ]
+    },
+    {
+      "name": "RolePermission",
+      "discriminator": [
+        41,
+        223,
+        214,
+        74,
+        223,
+        227,
+        184,
+        209
+      ]
+    },
+    {
+      "name": "RootAuthority",
+      "discriminator": [
+        136,
+        10,
+        202,
+        252,
+        76,
+        4,
+        102,
+        6
+      ]
+    },
+    {
+      "name": "UserRole",
+      "discriminator": [
+        62,
+        252,
+        194,
+        137,
+        183,
+        165,
+        147,
+        28
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "Unauthorized",
+      "msg": "You are not authorized to perform this action"
+    },
+    {
+      "code": 6001,
+      "name": "RoleAlreadyExists",
+      "msg": "A role with this name already exists"
+    },
+    {
+      "code": 6002,
+      "name": "PermissionAlreadyExists",
+      "msg": "A permission with this name already exists"
+    },
+    {
+      "code": 6003,
+      "name": "RoleNotFound",
+      "msg": "The specified role was not found"
+    },
+    {
+      "code": 6004,
+      "name": "PermissionNotFound",
+      "msg": "The specified permission was not found"
+    },
+    {
+      "code": 6005,
+      "name": "RoleExpired",
+      "msg": "The user's role assignment has expired"
+    },
+    {
+      "code": 6006,
+      "name": "NotRootAuthority",
+      "msg": "Only the root authority can perform this action"
+    },
+    {
+      "code": 6007,
+      "name": "RolePermissionAlreadyAssigned",
+      "msg": "This permission is already assigned to the role"
+    },
+    {
+      "code": 6008,
+      "name": "UserRoleAlreadyAssigned",
+      "msg": "This role is already assigned to the user"
+    },
+    {
+      "code": 6009,
+      "name": "RoleMismatch",
+      "msg": "The role does not belong to this root authority"
+    },
+    {
+      "code": 6010,
+      "name": "PermissionMismatch",
+      "msg": "The permission does not belong to this root authority"
+    },
+    {
+      "code": 6011,
+      "name": "UserMismatch",
+      "msg": "The user role does not match the expected user"
+    },
+    {
+      "code": 6012,
+      "name": "RolePermissionMismatch",
+      "msg": "The role permission link does not match the expected permission"
+    },
+    {
+      "code": 6013,
+      "name": "ArithmeticError",
+      "msg": "Arithmetic Error"
+    }
+  ],
+  "types": [
+    {
+      "name": "Permission",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "root",
+            "type": "pubkey"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Role",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "root",
+            "type": "pubkey"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RolePermission",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "role",
+            "type": "pubkey"
+          },
+          {
+            "name": "permission",
+            "type": "pubkey"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RootAuthority",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "role_count",
+            "type": "u64"
+          },
+          {
+            "name": "permission_count",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "UserRole",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "user",
+            "type": "pubkey"
+          },
+          {
+            "name": "role",
+            "type": "pubkey"
+          },
+          {
+            "name": "root",
+            "type": "pubkey"
+          },
+          {
+            "name": "granted_by",
+            "type": "pubkey"
+          },
+          {
+            "name": "expires_at",
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    }
+  ]
+}
