@@ -8,11 +8,14 @@ skip-lint = false
 [programs.localnet]
 solguard = "72YkKhqgzgue7niCaYs2QxQC3iLfUXGFMbo3yZ5K6d3Q"
 
+[programs.devnet]
+solguard = "72YkKhqgzgue7niCaYs2QxQC3iLfUXGFMbo3yZ5K6d3Q"
+
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "localnet"
+cluster = "devnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
