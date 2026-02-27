@@ -38,6 +38,7 @@ pub fn handler(ctx: Context<CreateRole>, role_name: String) -> Result<()> {
     let root = &mut ctx.accounts.root_authority;
 
     role.root = root.key();
+    role.name = role_name.clone();
     role.bump = ctx.bumps.role;
 
     root.role_count = root.role_count.checked_add(1).unwrap();

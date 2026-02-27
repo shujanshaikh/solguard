@@ -817,6 +817,10 @@ export type Solguard = {
             "type": "pubkey"
           },
           {
+            "name": "name",
+            "type": "string"
+          },
+          {
             "name": "bump",
             "type": "u8"
           }
@@ -831,6 +835,10 @@ export type Solguard = {
           {
             "name": "root",
             "type": "pubkey"
+          },
+          {
+            "name": "name",
+            "type": "string"
           },
           {
             "name": "bump",

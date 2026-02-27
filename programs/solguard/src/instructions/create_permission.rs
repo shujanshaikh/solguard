@@ -38,6 +38,7 @@ pub fn handler(ctx: Context<CreatePermission>, permission_name: String) -> Resul
     let root = &mut ctx.accounts.root_authority;
 
     permission.root = root.key();
+    permission.name = permission_name.clone();
     permission.bump = ctx.bumps.permission;
 
     root.permission_count = root.permission_count.checked_add(1).ok_or(RbacError::UserRoleAlreadyAssigned)?;

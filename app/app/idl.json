@@ -811,6 +811,10 @@
             "type": "pubkey"
           },
           {
+            "name": "name",
+            "type": "string"
+          },
+          {
             "name": "bump",
             "type": "u8"
           }
@@ -825,6 +829,10 @@
           {
             "name": "root",
             "type": "pubkey"
+          },
+          {
+            "name": "name",
+            "type": "string"
           },
           {
             "name": "bump",
