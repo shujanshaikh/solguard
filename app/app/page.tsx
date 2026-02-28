@@ -13,6 +13,7 @@ import {
   findRolePermission,
   findUserRole,
 } from "./hooks/usePda";
+import MarketingPage from "./components/MarketingPage";
 
 
 const Icons = {
@@ -428,93 +429,7 @@ export default function Dashboard() {
   // ── Render ─────────────────────────────────────────
 
   if (!connected) {
-    return (
-      <div className="app-shell">
-        <div className="main-area" style={{ marginLeft: 0 }}>
-          <header className="topbar">
-            <div className="topbar-title" style={{ gap: 10 }}>
-              <span style={{ color: "var(--accent)" }}>{Icons.shield}</span>
-              <span style={{ fontWeight: 700 }}>SOLGUARD</span>
-            </div>
-            <WalletMultiButton />
-          </header>
-          <div className="hero-screen" style={{ minHeight: "85vh" }}>
-            <svg className="hero-shield-bg" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-            </svg>
-            <div className="hero-pill">SOLANA DEVNET · <a href="https://explorer.solana.com/address/72YkKhqgzgue7niCaYs2QxQC3iLfUXGFMbo3yZ5K6d3Q?cluster=devnet" target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)", textDecoration: "none" }}>72YkKh…6d3Q</a></div>
-            <h2>Permissions that live<br /><span className="hero-accent">on the blockchain.</span></h2>
-            <p>
-              SolGuard is an on-chain RBAC protocol for Solana. Define roles, bind
-              permissions, and enforce access — all through PDAs any program can verify via CPI.
-            </p>
-            <div className="hero-buttons">
-              <WalletMultiButton />
-              <a className="btn btn-outline btn-lg" href="https://github.com/samar-58/solguard" target="_blank" rel="noopener noreferrer">
-                GitHub →
-              </a>
-            </div>
-          </div>
-
-          {/* ── Features ──────────────── */}
-          <section className="landing-features">
-            <div className="landing-section-header">
-              <h3>Why SolGuard?</h3>
-              <p>Replace database tables and JWT middleware with trustless on-chain accounts.</p>
-            </div>
-            <div className="features-grid">
-              <div className="feature-card">
-                <div className="feature-icon">{Icons.link}</div>
-                <h4>CPI-Callable</h4>
-                <p>Any Solana program can call <code>check_permission</code> via CPI to gate its instructions. One shared IAM layer for all your programs.</p>
-              </div>
-              <div className="feature-card">
-                <div className="feature-icon">{Icons.key}</div>
-                <h4>Role → Permission Chains</h4>
-                <p>Create roles, bind fine-grained permissions, and assign to wallets with optional expiry. The full RBAC model, on-chain.</p>
-              </div>
-              <div className="feature-card">
-                <div className="feature-icon">{Icons.lock}</div>
-                <h4>Immutable Audit Trail</h4>
-                <p>Every grant, revoke, and permission change is a transaction on the blockchain. No silent modifications, ever.</p>
-              </div>
-            </div>
-          </section>
-
-          {/* ── How it works ──────────── */}
-          <section className="landing-features" style={{ borderTop: "1px solid var(--border-subtle)" }}>
-            <div className="landing-section-header">
-              <h3>How it works</h3>
-              <p>Three steps to on-chain access control.</p>
-            </div>
-            <div className="steps-grid">
-              <div className="step-card">
-                <span className="step-number">1</span>
-                <h4>Initialize</h4>
-                <p>Deploy a root authority account to create your organization on-chain.</p>
-              </div>
-              <div className="step-card">
-                <span className="step-number">2</span>
-                <h4>Configure</h4>
-                <p>Create roles and permissions, then bind permissions to roles.</p>
-              </div>
-              <div className="step-card">
-                <span className="step-number">3</span>
-                <h4>Enforce</h4>
-                <p>Assign roles to wallets and verify access via CPI from any program.</p>
-              </div>
-            </div>
-          </section>
-
-          {/* ── Footer ────────────────── */}
-          <footer className="landing-footer">
-            <span>Built on Solana with Anchor</span>
-            <span>·</span>
-            <a href="https://github.com/samar-58/solguard" target="_blank" rel="noopener noreferrer">GitHub</a>
-          </footer>
-        </div>
-      </div>
-    );
+    return <MarketingPage />;
   }
 
   if (!rootExists) {
