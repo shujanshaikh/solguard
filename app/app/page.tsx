@@ -135,7 +135,8 @@ export default function Dashboard() {
   const [newPermName, setNewPermName] = useState("");
   const [assignUserAddr, setAssignUserAddr] = useState("");
   const [assignRoleName, setAssignRoleName] = useState("");
-  const [assignExpiry, setAssignExpiry] = useState("-1");
+  const [assignExpiry, setAssignExpiry] = useState("");
+  const [assignNeverExpires, setAssignNeverExpires] = useState(true);
   const [checkUserAddr, setCheckUserAddr] = useState("");
   const [checkRoleName, setCheckRoleName] = useState("");
   const [checkPermName, setCheckPermName] = useState("");
@@ -348,12 +349,12 @@ export default function Dashboard() {
       const userPubkey = new PublicKey(assignUserAddr.trim());
       const [rolePda] = findRole(rootPda, assignRoleName.trim());
       const [urPda] = findUserRole(rootPda, userPubkey, rolePda);
-      const expiry = parseInt(assignExpiry) || -1;
+      const expiry = assignNeverExpires ? -1 : Math.floor(new Date(assignExpiry).getTime() / 1000);
       await program.methods.assignRoleToUser(new BN(expiry))
         .accounts({ userRole: urPda, role: rolePda, user: userPubkey, rootAuthority: rootPda, authority: publicKey, systemProgram: SystemProgram.programId })
         .rpc();
       addToast(`"${assignRoleName.trim()}" assigned to ${shorten(assignUserAddr.trim())}`, "success");
-      setAssignUserAddr(""); setAssignRoleName(""); setAssignExpiry("-1");
+      setAssignUserAddr(""); setAssignRoleName(""); setAssignExpiry(""); setAssignNeverExpires(true);
       await loadUserRoles();
     } catch (err: any) {
       addToast(err.message?.slice(0, 80) || "Failed to assign role", "error");
@@ -416,23 +417,27 @@ export default function Dashboard() {
   if (!connected) {
     return (
       <div className="app-shell">
-        <div className="main-area">
+        <div className="main-area" style={{ marginLeft: 0 }}>
           <header className="topbar">
             <div className="topbar-title" style={{ gap: 10 }}>
               <span style={{ color: "var(--accent)" }}>{Icons.shield}</span>
-              <span style={{ fontWeight: 700 }}>SolGuard</span>
+              <span style={{ fontWeight: 700 }}>SOLGUARD</span>
             </div>
             <WalletMultiButton />
           </header>
           <div className="hero-screen">
-            <div className="hero-grid" />
-            <div className="hero-icon">{Icons.shield}</div>
-            <h2>On-Chain Access Control</h2>
+            <div className="hero-pill">LIVE ON SOLANA DEVNET</div>
+            <h2>Guard. Control.<br /><span className="hero-accent">On-chain.</span></h2>
             <p>
-              Manage roles, permissions, and user access directly on Solana.
-              Connect your wallet to get started.
+              The on-chain role-based access control protocol built for Solana.
+              Manage roles, permissions, and user access with Anchor-integrated speed.
             </p>
-            <WalletMultiButton />
+            <div className="hero-buttons">
+              <WalletMultiButton />
+              <a className="btn btn-outline btn-lg" href="https://github.com/samar-58/solguard" target="_blank" rel="noopener noreferrer">
+                GitHub →
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -442,11 +447,11 @@ export default function Dashboard() {
   if (!rootExists) {
     return (
       <div className="app-shell">
-        <div className="main-area">
+        <div className="main-area" style={{ marginLeft: 0 }}>
           <header className="topbar">
             <div className="topbar-title" style={{ gap: 10 }}>
               <span style={{ color: "var(--accent)" }}>{Icons.shield}</span>
-              <span style={{ fontWeight: 700 }}>SolGuard</span>
+              <span style={{ fontWeight: 700 }}>SOLGUARD</span>
             </div>
             <div className="topbar-right">
               <div className="topbar-network"><span className="dot" />devnet</div>
@@ -454,9 +459,8 @@ export default function Dashboard() {
             </div>
           </header>
           <div className="hero-screen">
-            <div className="hero-grid" />
             <div className="hero-icon">{Icons.box}</div>
-            <h2>Initialize Your Organization</h2>
+            <h2>Initialize Your<br /><span className="hero-accent">Organization</span></h2>
             <p>
               Deploy a root authority account on-chain to begin creating roles
               and managing permissions.
@@ -485,7 +489,7 @@ export default function Dashboard() {
       <aside className="sidebar">
         <div className="sidebar-brand">
           <span style={{ color: "var(--accent)" }}>{Icons.shield}</span>
-          <h1>SolGuard</h1>
+          <h1>SOLGUARD</h1>
           <span className="env-badge">devnet</span>
         </div>
 
@@ -744,8 +748,16 @@ export default function Dashboard() {
                       </select>
                     </div>
                     <div className="field">
-                      <label>Expiry (Unix)</label>
-                      <input className="input input-mono" placeholder="-1 = never" value={assignExpiry} onChange={(e) => setAssignExpiry(e.target.value)} />
+                      <label>Expiry</label>
+                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "var(--text-secondary)", cursor: "pointer", textTransform: "none", letterSpacing: 0, fontWeight: 400 }}>
+                          <input type="checkbox" checked={assignNeverExpires} onChange={(e) => setAssignNeverExpires(e.target.checked)} />
+                          Never expires
+                        </label>
+                      </div>
+                      {!assignNeverExpires && (
+                        <input type="datetime-local" className="input" value={assignExpiry} onChange={(e) => setAssignExpiry(e.target.value)} />
+                      )}
                     </div>
                   </div>
                   <button className="btn btn-primary" onClick={assignRole} disabled={loading || !assignUserAddr.trim() || !assignRoleName.trim()}>
