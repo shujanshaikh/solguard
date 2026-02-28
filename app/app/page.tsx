@@ -429,11 +429,11 @@ export default function Dashboard() {
             <svg className="hero-shield-bg" viewBox="0 0 24 24" fill="currentColor" stroke="none">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
             </svg>
-            <div className="hero-pill">LIVE ON SOLANA DEVNET</div>
-            <h2>Guard. Control.<br /><span className="hero-accent">On-chain.</span></h2>
+            <div className="hero-pill">SOLANA DEVNET · <a href="https://explorer.solana.com/address/72YkKhqgzgue7niCaYs2QxQC3iLfUXGFMbo3yZ5K6d3Q?cluster=devnet" target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)", textDecoration: "none" }}>72YkKh…6d3Q</a></div>
+            <h2>Permissions that live<br /><span className="hero-accent">on the blockchain.</span></h2>
             <p>
-              The on-chain role-based access control protocol built for Solana.
-              Manage roles, permissions, and user access with cryptography and security.
+              SolGuard is an on-chain RBAC protocol for Solana. Define roles, bind
+              permissions, and enforce access — all through PDAs any program can verify via CPI.
             </p>
             <div className="hero-buttons">
               <WalletMultiButton />
