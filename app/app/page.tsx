@@ -109,7 +109,7 @@ const shorten = (addr: string, n = 4) => addr.slice(0, n) + "…" + addr.slice(-
 // New account size: 8 (discriminator) + 32 (root) + 4 (string len) + 32 (max name) + 1 (bump)
 const ROLE_PERM_ACCOUNT_SIZE = 77;
 
-const tabMeta: Record<Tab, { label: string; icon: JSX.Element; desc: string }> = {
+const tabMeta: Record<Tab, { label: string; icon: React.ReactNode; desc: string }> = {
   roles: { label: "Roles", icon: Icons.shield, desc: "Create and manage access roles" },
   permissions: { label: "Permissions", icon: Icons.key, desc: "Define granular permission primitives" },
   users: { label: "Users", icon: Icons.users, desc: "Assign roles to wallet addresses" },
@@ -283,6 +283,7 @@ export default function Dashboard() {
     setLoading(true);
     try {
       await program.methods.initializeRoot()
+        // @ts-ignore — Anchor IDL type inference
         .accounts({ rootAuthority: rootPda, authority: publicKey, systemProgram: SystemProgram.programId })
         .rpc();
       addToast("Root authority initialized", "success");
@@ -300,6 +301,7 @@ export default function Dashboard() {
       const name = newRoleName.trim();
       const [rolePda] = findRole(rootPda, name);
       await program.methods.createRole(name)
+        // @ts-ignore — Anchor IDL type inference
         .accounts({ role: rolePda, rootAuthority: rootPda, authority: publicKey, systemProgram: SystemProgram.programId })
         .rpc();
       addToast(`Role "${name}" created`, "success");
@@ -318,6 +320,7 @@ export default function Dashboard() {
       const name = newPermName.trim();
       const [permPda] = findPermission(rootPda, name);
       await program.methods.createPermission(name)
+        // @ts-ignore — Anchor IDL type inference
         .accounts({ permission: permPda, rootAuthority: rootPda, authority: publicKey, systemProgram: SystemProgram.programId })
         .rpc();
       addToast(`Permission "${name}" created`, "success");
@@ -337,6 +340,7 @@ export default function Dashboard() {
       const [permPda] = findPermission(rootPda, bindPermName.trim());
       const [rpPda] = findRolePermission(rolePda, permPda);
       await program.methods.assignPermissionToRole()
+        // @ts-ignore — Anchor IDL type inference
         .accounts({ rolePermission: rpPda, role: rolePda, permission: permPda, rootAuthority: rootPda, authority: publicKey, systemProgram: SystemProgram.programId })
         .rpc();
       addToast(`"${bindPermName.trim()}" → "${bindRoleName.trim()}"`, "success");
@@ -357,6 +361,7 @@ export default function Dashboard() {
       const [urPda] = findUserRole(rootPda, userPubkey, rolePda);
       const expiry = assignNeverExpires ? -1 : Math.floor(new Date(assignExpiry).getTime() / 1000);
       await program.methods.assignRoleToUser(new BN(expiry))
+        // @ts-ignore — Anchor IDL type inference
         .accounts({ userRole: urPda, role: rolePda, user: userPubkey, rootAuthority: rootPda, authority: publicKey, systemProgram: SystemProgram.programId })
         .rpc();
       addToast(`"${assignRoleName.trim()}" assigned to ${shorten(assignUserAddr.trim())}`, "success");
@@ -373,6 +378,7 @@ export default function Dashboard() {
     setLoading(true);
     try {
       await program.methods.revokeRoleFromUser()
+        // @ts-ignore — Anchor IDL type inference
         .accounts({ userRole: ur.userRolePda, role: ur.rolePda, user: new PublicKey(ur.user), rootAuthority: rootPda, authority: publicKey })
         .rpc();
       addToast(`Role revoked from ${shorten(ur.user)}`, "success");
@@ -394,6 +400,7 @@ export default function Dashboard() {
       const [urPda] = findUserRole(rootPda, userPubkey, rolePda);
       const [rpPda] = findRolePermission(rolePda, permPda);
       await program.methods.checkPermission()
+        // @ts-ignore — Anchor IDL type inference
         .accounts({ userRole: urPda, rolePermission: rpPda, user: userPubkey, permission: permPda })
         .rpc();
       setCheckResult("granted");
