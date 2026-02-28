@@ -267,8 +267,14 @@ export default function Dashboard() {
   }, [program, rootPda, rootExists]);
 
   useEffect(() => {
-    if (rootExists) { loadRoles(); loadPermissions(); loadUserRoles(); }
-  }, [rootExists, loadRoles, loadPermissions, loadUserRoles]);
+    if (!rootExists) return;
+    const loadAll = async () => {
+      await loadRoles();
+      await loadPermissions();
+      await loadUserRoles();
+    };
+    loadAll();
+  }, [rootExists]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Actions ────────────────────────────────────────
 
