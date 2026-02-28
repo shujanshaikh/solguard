@@ -425,12 +425,15 @@ export default function Dashboard() {
             </div>
             <WalletMultiButton />
           </header>
-          <div className="hero-screen">
+          <div className="hero-screen" style={{ minHeight: "85vh" }}>
+            <svg className="hero-shield-bg" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
             <div className="hero-pill">LIVE ON SOLANA DEVNET</div>
             <h2>Guard. Control.<br /><span className="hero-accent">On-chain.</span></h2>
             <p>
               The on-chain role-based access control protocol built for Solana.
-              Manage roles, permissions, and user access with Anchor-integrated speed.
+              Manage roles, permissions, and user access with cryptography and security.
             </p>
             <div className="hero-buttons">
               <WalletMultiButton />
@@ -439,6 +442,63 @@ export default function Dashboard() {
               </a>
             </div>
           </div>
+
+          {/* ── Features ──────────────── */}
+          <section className="landing-features">
+            <div className="landing-section-header">
+              <h3>Why SolGuard?</h3>
+              <p>Replace database tables and JWT middleware with trustless on-chain accounts.</p>
+            </div>
+            <div className="features-grid">
+              <div className="feature-card">
+                <div className="feature-icon">{Icons.link}</div>
+                <h4>CPI-Callable</h4>
+                <p>Any Solana program can call <code>check_permission</code> via CPI to gate its instructions. One shared IAM layer for all your programs.</p>
+              </div>
+              <div className="feature-card">
+                <div className="feature-icon">{Icons.key}</div>
+                <h4>Role → Permission Chains</h4>
+                <p>Create roles, bind fine-grained permissions, and assign to wallets with optional expiry. The full RBAC model, on-chain.</p>
+              </div>
+              <div className="feature-card">
+                <div className="feature-icon">{Icons.lock}</div>
+                <h4>Immutable Audit Trail</h4>
+                <p>Every grant, revoke, and permission change is a transaction on the blockchain. No silent modifications, ever.</p>
+              </div>
+            </div>
+          </section>
+
+          {/* ── How it works ──────────── */}
+          <section className="landing-features" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+            <div className="landing-section-header">
+              <h3>How it works</h3>
+              <p>Three steps to on-chain access control.</p>
+            </div>
+            <div className="steps-grid">
+              <div className="step-card">
+                <span className="step-number">1</span>
+                <h4>Initialize</h4>
+                <p>Deploy a root authority account to create your organization on-chain.</p>
+              </div>
+              <div className="step-card">
+                <span className="step-number">2</span>
+                <h4>Configure</h4>
+                <p>Create roles and permissions, then bind permissions to roles.</p>
+              </div>
+              <div className="step-card">
+                <span className="step-number">3</span>
+                <h4>Enforce</h4>
+                <p>Assign roles to wallets and verify access via CPI from any program.</p>
+              </div>
+            </div>
+          </section>
+
+          {/* ── Footer ────────────────── */}
+          <footer className="landing-footer">
+            <span>Built on Solana with Anchor</span>
+            <span>·</span>
+            <a href="https://github.com/samar-58/solguard" target="_blank" rel="noopener noreferrer">GitHub</a>
+          </footer>
         </div>
       </div>
     );

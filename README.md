@@ -1,6 +1,8 @@
 # SolGuard — On-Chain RBAC for Solana
 
-An on-chain Role-Based Access Control system built as an Anchor program on Solana. Replaces traditional Web2 RBAC (database tables, JWT middleware, per-app silos) with a trustless, CPI-callable permission layer that any Solana program can use.
+> Trustless, CPI-callable Role-Based Access Control on Solana. Replace database tables and JWT middleware with on-chain accounts that any program can verify.
+
+![SolGuard](docs/screenshot.png)
 
 ## Devnet Deployment
 
@@ -12,24 +14,17 @@ An on-chain Role-Based Access Control system built as an Anchor program on Solan
 
 ---
 
-## How This Works in Web2
+## Why SolGuard?
 
-In a typical Web2 backend RBAC system:
+Traditional Web2 RBAC relies on database tables, JWT middleware, and per-app silos — each application reinvents the wheel, trust is centralized, and there's no audit trail unless explicitly built.
 
-- **Database tables** — `users`, `roles`, `permissions`, `user_roles`, `role_permissions` stored in PostgreSQL/MySQL
-- **JWT middleware** — on every API request, a middleware decodes the JWT, extracts the user's roles, and checks permissions
-- **Per-app silos** — each application has its own RBAC system; permissions can't be shared across services
-- **Trust the operator** — the database admin can silently modify roles, and there's no audit trail unless explicitly built
+SolGuard replaces all of that with on-chain accounts:
 
-## How This Works on Solana
-
-SolGuard replaces all of the above with on-chain accounts:
-
-- **Accounts as the permission store** — each role, permission, and assignment is a PDA (Program Derived Address) on Solana
-- **Program as trustless middleware** — the `check_permission` instruction validates the user→role→permission chain on-chain, no JWT needed
+- **Accounts as the permission store** — roles, permissions, and assignments are PDAs on Solana
+- **Trustless middleware** — `check_permission` validates the user→role→permission chain on-chain, no JWT needed
 - **CPI-callable** — any Solana program can call `check_permission` via CPI to gate its own instructions
-- **Shared across programs** — one SolGuard deployment can serve multiple programs, like a shared IAM layer
-- **Immutable audit trail** — every role grant, revoke, and permission change is a transaction on the blockchain
+- **Shared across programs** — one SolGuard deployment serves multiple programs, like a shared IAM layer
+- **Immutable audit trail** — every grant, revoke, and permission change is a transaction on the blockchain
 
 ## Web2 → Solana Mapping
 
@@ -45,7 +40,6 @@ SolGuard replaces all of the above with on-chain accounts:
 | Middleware permission check | `check_permission` instruction |
 | `isAdmin()` helper | CPI call to `check_permission` |
 | Database admin | `RootAuthority.authority` signer |
-| Password reset / transfer | `transfer_authority` instruction |
 | Role expiry / TTL | `UserRole.expires_at` field |
 
 ---
@@ -95,15 +89,13 @@ SolGuard replaces all of the above with on-chain accounts:
 
 ## Account Model
 
-| Account | PDA Seeds | Size (bytes) | Fields |
-|---|---|---|---|
-| `RootAuthority` | `["root", authority]` | 57 | `authority`, `role_count`, `permission_count`, `bump` |
-| `Role` | `["role", root, name]` | 41 | `root`, `bump` |
-| `Permission` | `["permission", root, name]` | 41 | `root`, `bump` |
-| `RolePermission` | `["role_permission", role, permission]` | 73 | `role`, `permission`, `bump` |
-| `UserRole` | `["user_role", root, user, role]` | 145 | `user`, `role`, `root`, `granted_by`, `expires_at`, `bump` |
-
-> Size includes the 8-byte Anchor discriminator.
+| Account | PDA Seeds | Fields |
+|---|---|---|
+| `RootAuthority` | `["root", authority]` | `authority`, `role_count`, `permission_count`, `bump` |
+| `Role` | `["role", root, name]` | `root`, `name`, `bump` |
+| `Permission` | `["permission", root, name]` | `root`, `name`, `bump` |
+| `RolePermission` | `["role_permission", role, permission]` | `role`, `permission`, `bump` |
+| `UserRole` | `["user_role", root, user, role]` | `user`, `role`, `root`, `granted_by`, `expires_at`, `bump` |
 
 ## Instruction Reference
 
@@ -114,22 +106,37 @@ SolGuard replaces all of the above with on-chain accounts:
 | `create_permission` | `permission_name: String` | Create a permission under the root |
 | `assign_permission_to_role` | — | Bind a permission to a role |
 | `revoke_permission_from_role` | — | Unbind a permission from a role (closes account) |
-| `assign_role_to_user` | `expires_at: i64` | Grant a role to a user wallet (-1 = never expires) |
+| `assign_role_to_user` | `expires_at: i64` | Grant a role to a user wallet (`-1` = never expires) |
 | `revoke_role_from_user` | — | Remove a role from a user (closes account) |
 | `check_permission` | — | Validate user has permission via role chain |
 | `transfer_authority` | `new_authority: Pubkey` | Transfer root control to a new wallet |
 
 ---
 
-## Tradeoffs & Constraints
+## Frontend Dashboard
 
-- **No dynamic iteration on-chain** — you can't list all roles of a user on-chain. The client must enumerate off-chain (e.g. via `getProgramAccounts` with filters) and supply the correct `UserRole` + `RolePermission` accounts to `check_permission`.
-- **Storage costs** — each PDA costs rent (~0.001 SOL per account). A system with 10 roles × 20 permissions × 100 users = ~2,000 accounts ≈ 2 SOL in rent.
-- **No free revocation queries** — to check "does user X have ANY role?", you must query off-chain. On-chain checks are always for a specific user+permission pair.
-- **PDA seeds use raw name bytes** — names are limited to 32 bytes (the max PDA seed length). Names are case-sensitive.
-- **Single authority** — only one wallet controls each `RootAuthority`. For multi-sig, the authority could be a multisig PDA.
+The `app/` directory contains a **Next.js** dashboard for managing SolGuard directly from the browser:
 
-## Running Locally
+- **Create roles & permissions** with named on-chain accounts
+- **Bind permissions to roles** and assign roles to users via dropdown selectors
+- **Set role expiry** with a date picker (or mark as "never expires")
+- **Check access** — verify if a wallet has a specific permission through its role chain
+- **Active assignments** table showing all user-role mappings under your root authority
+
+### Tech stack
+
+`Next.js 15` · `React 19` · `@solana/wallet-adapter` · `@coral-xyz/anchor` · `TypeScript`
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- [Rust](https://rustup.rs/) + [Solana CLI](https://docs.solana.com/cli/install-solana-cli-tools) + [Anchor CLI](https://www.anchor-lang.com/docs/installation)
+- [Node.js](https://nodejs.org/) 18+ and Yarn
+
+### Build & Test the Program
 
 ```bash
 # install dependencies
@@ -138,17 +145,33 @@ yarn install
 # build the program
 anchor build
 
-# run tests (spins up local validator automatically)
+# run tests (spins up local validator)
 anchor test
+```
 
-# deploy to devnet
+### Deploy to Devnet
+
+```bash
 solana config set --url devnet
 anchor deploy --provider.cluster devnet
 ```
 
+### Run the Frontend
+
+```bash
+cd app
+yarn install
+yarn dev
+# → http://localhost:3000
+```
+
+Connect a Solana wallet (Phantom, Backpack, etc.) on devnet to start managing roles and permissions.
+
+---
+
 ## CPI Integration Example
 
-Another Solana program can call `check_permission` to gate its instructions:
+Any Solana program can call `check_permission` via CPI to gate its instructions:
 
 ```rust
 use anchor_lang::prelude::*;
@@ -156,7 +179,6 @@ use solguard::cpi::accounts::CheckPermission;
 use solguard::program::Solguard;
 
 pub fn guarded_action(ctx: Context<GuardedAction>) -> Result<()> {
-    // CPI into SolGuard to verify the user has the required permission
     let cpi_program = ctx.accounts.solguard_program.to_account_info();
     let cpi_accounts = CheckPermission {
         user_role: ctx.accounts.user_role.to_account_info(),
@@ -167,7 +189,6 @@ pub fn guarded_action(ctx: Context<GuardedAction>) -> Result<()> {
     let cpi_ctx = CpiContext::new(cpi_program, cpi_accounts);
     solguard::cpi::check_permission(cpi_ctx)?;
 
-    // if we get here, the user has the permission
     msg!("Access granted — proceeding with guarded action");
     Ok(())
 }
@@ -182,6 +203,15 @@ pub struct GuardedAction<'info> {
 }
 ```
 
+---
+
+## Tradeoffs & Constraints
+
+- **No dynamic iteration on-chain** — you can't list all roles of a user on-chain. The client enumerates off-chain via `getProgramAccounts` with `memcmp` filters.
+- **Storage costs** — each PDA costs rent (~0.001 SOL). 10 roles × 20 permissions × 100 users ≈ 2,000 accounts ≈ 2 SOL.
+- **PDA seed length** — names are limited to 32 bytes and are case-sensitive.
+- **Single authority** — one wallet controls each `RootAuthority`. For multi-sig, the authority could be a multisig PDA.
+
 ## Project Structure
 
 ```
@@ -190,14 +220,12 @@ solguard/
 │   ├── lib.rs                              # program entrypoint
 │   ├── errors.rs                           # error codes
 │   ├── state/
-│   │   ├── mod.rs
 │   │   ├── root_authority.rs
 │   │   ├── role.rs
 │   │   ├── permission.rs
 │   │   ├── role_permission.rs
 │   │   └── user_role.rs
 │   └── instructions/
-│       ├── mod.rs
 │       ├── initialize_root.rs
 │       ├── create_role.rs
 │       ├── create_permission.rs
@@ -207,8 +235,25 @@ solguard/
 │       ├── revoke_role_from_user.rs
 │       ├── check_permission.rs
 │       └── transfer_authority.rs
-├── tests/solguard.ts                       # 18 test cases
+├── app/                                    # Next.js dashboard
+│   ├── app/
+│   │   ├── page.tsx                        # main UI
+│   │   ├── globals.css                     # design system
+│   │   ├── layout.tsx
+│   │   ├── providers.tsx                   # wallet adapter setup
+│   │   ├── idl.json                        # anchor IDL
+│   │   └── hooks/
+│   │       ├── useProgram.ts               # anchor program hook
+│   │       └── usePda.ts                   # PDA derivation helpers
+│   └── package.json
+├── tests/solguard.ts
 ├── Anchor.toml
 ├── Cargo.toml
 └── package.json
 ```
+
+---
+
+## License
+
+MIT
