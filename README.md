@@ -2,8 +2,6 @@
 
 > Trustless, CPI-callable Role-Based Access Control on Solana. Replace database tables and JWT middleware with on-chain accounts that any program can verify.
 
-![SolGuard](docs/screenshot.png)
-
 ## Devnet Deployment
 
 | Item | Value |
